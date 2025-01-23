@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 //single product
-public class OrderItemDTO {
+public class OrderItemDto {
 	Long productId;
 
 	String productName;

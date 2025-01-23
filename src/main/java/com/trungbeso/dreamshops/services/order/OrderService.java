@@ -1,6 +1,6 @@
 package com.trungbeso.dreamshops.services.order;
 
-import com.trungbeso.dreamshops.dtos.OrderDTO;
+import com.trungbeso.dreamshops.dtos.OrderDto;
 import com.trungbeso.dreamshops.enums.OrderStatus;
 import com.trungbeso.dreamshops.exception.ResourceNotFoundException;
 import com.trungbeso.dreamshops.models.Cart;
@@ -89,7 +89,7 @@ public class OrderService implements IOrderService{
 		return orderRepository.findByUserId(userId);
 	}
 
-	private OrderDTO convertToOrderDTO(Order order) {
-		return modelMapper.map(order, OrderDTO.class);
+	private OrderDto convertToOrderDTO(Order order) {
+		return modelMapper.map(order, OrderDto.class);
 	}
 }
