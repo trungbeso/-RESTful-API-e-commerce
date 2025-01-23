@@ -1,13 +1,13 @@
 package com.trungbeso.dreamshops.services.order;
 
-import com.trungbeso.dreamshops.models.Order;
+import com.trungbeso.dreamshops.dtos.OrderDto;
 
 import java.util.List;
 
 public interface IOrderService {
-	Order placeOrder(Long userId);
+	OrderDto placeOrder(Long userId);
 
-	Order getOrder(Long orderId);
+	OrderDto getOrder(Long orderId);
 
-	List<Order> getUserOrders(Long userId);
+	List<OrderDto> getUserOrders(Long userId);
 }
