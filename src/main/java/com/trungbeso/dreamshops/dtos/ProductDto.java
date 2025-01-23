@@ -1,26 +1,29 @@
 package com.trungbeso.dreamshops.dtos;
 
 import com.trungbeso.dreamshops.models.Category;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDto {
-	private Long id;
+	Long id;
 
-	private String name;
+	String name;
 
-	private String brand;
+	String brand;
 
-	private BigDecimal price;
+	BigDecimal price;
 
-	private int inventory; //quantity
+	int inventory; //quantity
 
-	private String description;
+	String description;
 
-	private Category category;
+	Category category;
 
-	private List<ImageDto> images;
+	List<ImageDto> images;
 }
