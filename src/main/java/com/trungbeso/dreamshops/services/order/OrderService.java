@@ -40,6 +40,7 @@ public class OrderService implements IOrderService{
 		order.setTotalAmount(calculateTotalAmount(orderItemList));
 		Order orderSaved = orderRepository.save(order);
 
+		//done payment -> delete cart
 		cartService.clearCart(cart.getId());
 		return convertToOrderDTO(orderSaved);
 	}

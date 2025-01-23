@@ -20,9 +20,7 @@ public class UserDto {
 
 	 String password;
 
-
 	 Cart cart;
-
 
 	 List<OrderDto> orders;
 }

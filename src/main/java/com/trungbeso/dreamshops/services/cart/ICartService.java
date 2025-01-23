@@ -11,6 +11,7 @@ public interface ICartService {
 
 	BigDecimal getTotalPrice(Long id);
 
+	Cart getCartByUser(Long userId);
 
 	Long initializeNewCart();
 

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.aspectj.weaver.ast.Or;
+import org.hibernate.annotations.NaturalId;
 
 import java.util.List;
 
@@ -24,13 +24,14 @@ public class User {
 
 	private String lastName;
 
+	@NaturalId
 	private String email;
 
 	private String password;
 
-	@OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Cart cart;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Order> orders;
 }
