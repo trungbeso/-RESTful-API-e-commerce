@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderDTO {
+public class OrderDto {
 	Long orderId;
 
 	LocalDate orderDate;
@@ -20,5 +20,5 @@ public class OrderDTO {
 
 	OrderStatus orderStatus;
 
-	Set<OrderItemDTO> items;
+	Set<OrderItemDto> items;
 }

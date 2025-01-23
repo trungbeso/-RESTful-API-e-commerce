@@ -1,6 +1,6 @@
 package com.trungbeso.dreamshops.services.order;
 
-import com.trungbeso.dreamshops.dtos.OrderDTO;
+import com.trungbeso.dreamshops.dtos.OrderDto;
 import com.trungbeso.dreamshops.enums.OrderStatus;
 import com.trungbeso.dreamshops.exception.ResourceNotFoundException;
 import com.trungbeso.dreamshops.models.Cart;
@@ -32,7 +32,7 @@ public class OrderService implements IOrderService{
 	ModelMapper modelMapper;
 
 	@Override
-	public Order placeOrder(Long userId) {
+	public OrderDto placeOrder(Long userId) {
 		Cart cart = cartService.getCartByUserId(userId);
 		Order order = createOrder(cart);
 		List<OrderItem> orderItemList = createOrderItems(order, cart);
@@ -41,7 +41,7 @@ public class OrderService implements IOrderService{
 		Order orderSaved = orderRepository.save(order);
 
 		cartService.clearCart(cart.getId());
-		return orderSaved;
+		return convertToOrderDTO(orderSaved);
 	}
 
 
@@ -79,17 +79,20 @@ public class OrderService implements IOrderService{
 
 
 	@Override
-	public Order getOrder(Long orderId) {
-		return orderRepository.findById(orderId)
+	public OrderDto getOrder(Long orderId) {
+		var order = orderRepository.findById(orderId)
 			  .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+		return convertToOrderDTO(order);
 	}
 
 	@Override
-	public List<Order> getUserOrders(Long userId) {
-		return orderRepository.findByUserId(userId);
+	public List<OrderDto> getUserOrders(Long userId) {
+		return orderRepository.findByUserId(userId)
+			  .stream()
+			  .map(this::convertToOrderDTO).toList();
 	}
 
-	private OrderDTO convertToOrderDTO(Order order) {
-		return modelMapper.map(order, OrderDTO.class);
+	private OrderDto convertToOrderDTO(Order order) {
+		return modelMapper.map(order, OrderDto.class);
 	}
 }
