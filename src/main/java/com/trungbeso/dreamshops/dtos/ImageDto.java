@@ -1,11 +1,14 @@
 package com.trungbeso.dreamshops.dtos;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ImageDto {
-	private Long id;
-	private String fileName;
-	private String downloadUrl;
+	Long id;
+	String fileName;
+	String downloadUrl;
 
 }

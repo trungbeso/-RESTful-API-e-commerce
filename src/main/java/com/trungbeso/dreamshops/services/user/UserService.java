@@ -1,5 +1,6 @@
 package com.trungbeso.dreamshops.services.user;
 
+import com.trungbeso.dreamshops.dtos.UserDto;
 import com.trungbeso.dreamshops.exception.ResourceNotFoundException;
 import com.trungbeso.dreamshops.models.User;
 import com.trungbeso.dreamshops.repositories.IUserRepository;
@@ -8,6 +9,7 @@ import com.trungbeso.dreamshops.request.UserUpdateRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class UserService implements IUserService{
 
 	IUserRepository userRepository;
+	ModelMapper modelMapper;
 
 	@Override
 	public User getUserById(Long userId) {
@@ -53,5 +56,10 @@ public class UserService implements IUserService{
 		userRepository.findById(userId).ifPresentOrElse(userRepository :: delete, () -> {
 			throw new ResourceNotFoundException("User not found");
 		} );
+	}
+
+	@Override
+	public UserDto convertTouserDto(User user) {
+		return modelMapper.map(user, UserDto.class);
 	}
 }
