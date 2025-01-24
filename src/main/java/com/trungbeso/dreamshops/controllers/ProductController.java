@@ -2,6 +2,7 @@ package com.trungbeso.dreamshops.controllers;
 
 
 import com.trungbeso.dreamshops.dtos.ProductDto;
+import com.trungbeso.dreamshops.exception.AlreadyExistsException;
 import com.trungbeso.dreamshops.exception.ResourceNotFoundException;
 import com.trungbeso.dreamshops.models.Product;
 import com.trungbeso.dreamshops.request.AddProductRequest;
@@ -16,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -35,7 +35,7 @@ public class ProductController {
 
 	//Path variable mean take variable form url path to method
 	@GetMapping("product/{productId}/product")
-	public ResponseEntity<ApiResponse> getProductById(@PathVariable/*("productId")*/ Long productId) {
+	public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
 		try {
 			Product product = productService.getProductById(productId);
 			ProductDto productDto = productService.convertToDto(product);
@@ -53,8 +53,8 @@ public class ProductController {
 			Product theProduct = productService.addProduct(product);
 			ProductDto productDto = productService.convertToDto(theProduct);
 			return ResponseEntity.ok(new ApiResponse("Add Product  Success!", productDto));
-		} catch (Exception e) {
-			return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+		} catch (AlreadyExistsException e) {
+			return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
 		}
 	}
 
