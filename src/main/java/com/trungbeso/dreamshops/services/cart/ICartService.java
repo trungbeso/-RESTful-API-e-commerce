@@ -1,6 +1,7 @@
 package com.trungbeso.dreamshops.services.cart;
 
 import com.trungbeso.dreamshops.models.Cart;
+import com.trungbeso.dreamshops.models.User;
 
 import java.math.BigDecimal;
 
@@ -13,7 +14,7 @@ public interface ICartService {
 
 	Cart getCartByUser(Long userId);
 
-	Long initializeNewCart();
+	Cart initializeNewCart(User user);
 
 	Cart getCartByUserId(Long userId);
 }

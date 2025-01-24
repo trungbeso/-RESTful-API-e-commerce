@@ -15,7 +15,5 @@ public class CartItemDto {
 
 	BigDecimal unitPrice;
 
-	BigDecimal totalPrice;
-
 	ProductDto product;
 }

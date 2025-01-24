@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -31,18 +32,18 @@ public class OrderService implements IOrderService{
 	CartService cartService;
 	ModelMapper modelMapper;
 
+	@Transactional
 	@Override
-	public OrderDto placeOrder(Long userId) {
-		Cart cart = cartService.getCartByUserId(userId);
+	public Order placeOrder(Long userId) {
+		Cart cart   = cartService.getCartByUserId(userId);
 		Order order = createOrder(cart);
 		List<OrderItem> orderItemList = createOrderItems(order, cart);
 		order.setOrderItems(new HashSet<>(orderItemList));
 		order.setTotalAmount(calculateTotalAmount(orderItemList));
-		Order orderSaved = orderRepository.save(order);
+		Order savedOrder = orderRepository.save(order);
 
-		//done payment -> delete cart
 		cartService.clearCart(cart.getId());
-		return convertToOrderDTO(orderSaved);
+		return savedOrder;
 	}
 
 
@@ -55,7 +56,6 @@ public class OrderService implements IOrderService{
 		order.setOrderDate(LocalDate.now());
 		return order;
 	}
-
 
 	private List<OrderItem> createOrderItems(Order order, Cart cart) {
 		return cart.getItems().stream().map(cartItem -> {
@@ -78,7 +78,6 @@ public class OrderService implements IOrderService{
 			  .reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
-
 	@Override
 	public OrderDto getOrder(Long orderId) {
 		var order = orderRepository.findById(orderId)
@@ -93,7 +92,8 @@ public class OrderService implements IOrderService{
 			  .map(this::convertToOrderDTO).toList();
 	}
 
-	private OrderDto convertToOrderDTO(Order order) {
+	@Override
+	public OrderDto convertToOrderDTO(Order order) {
 		return modelMapper.map(order, OrderDto.class);
 	}
 }

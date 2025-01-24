@@ -2,6 +2,8 @@ package com.trungbeso.dreamshops.controllers;
 
 import com.trungbeso.dreamshops.dtos.OrderDto;
 import com.trungbeso.dreamshops.exception.ResourceNotFoundException;
+
+import com.trungbeso.dreamshops.models.Order;
 import com.trungbeso.dreamshops.response.ApiResponse;
 import com.trungbeso.dreamshops.services.order.IOrderService;
 import lombok.AccessLevel;
@@ -22,12 +24,13 @@ public class OrderController {
 	IOrderService orderService;
 
 	@PostMapping("/order")
-	public ResponseEntity<ApiResponse> create(@RequestParam Long userId) {
+	public ResponseEntity<ApiResponse> createOrder(@RequestParam Long userId) {
 		try {
-			OrderDto orderDto = orderService.placeOrder(userId);
-			return ResponseEntity.ok(new ApiResponse("Item Order Success", orderDto));
+			Order order =  orderService.placeOrder(userId);
+			OrderDto orderDto = orderService.convertToOrderDTO(order);
+			return ResponseEntity.ok(new ApiResponse("Item Order Success!", orderDto));
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error :", e.getMessage()));
+			return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error Occured!", e.getMessage()));
 		}
 	}
 
