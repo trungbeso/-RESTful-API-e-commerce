@@ -7,7 +7,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
-
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.lang.NonNull;
@@ -15,18 +16,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@NoArgsConstructor(force = true)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-	JwtUtils jwtUtils;
-	ShopUserDetailsService userDetailsService;
+	private final JwtUtils jwtUtils;
+	private final ShopUserDetailsService userDetailsService;
 
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -34,13 +35,17 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	                                @NonNull FilterChain filterChain) throws ServletException, IOException {
 		try {
 			String jwt = parseJwt(request);
-			if (StringUtils.hasText(jwt) && jwtUtils.validateToken(jwt)) {
-				String username = jwtUtils.getUsernameFromToken(jwt);
-				//extract username from database
-				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-				//authenticate user
-				Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-				SecurityContextHolder.getContext().setAuthentication(auth);
+			if (StringUtils.hasText(jwt)) {
+				assert jwtUtils != null;
+				if (jwtUtils.validateToken(jwt)) {
+					String username = jwtUtils.getUsernameFromToken(jwt);
+					//extract username from database
+					assert userDetailsService != null;
+					UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+					//authenticate user
+					Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(auth);
+				}
 			}
 		} catch (JwtException e) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
