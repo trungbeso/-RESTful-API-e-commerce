@@ -32,3 +32,9 @@ build/
 ### VS Code ###
 **/.vscode/*
 
+
+**/.DS-Store
+**/node_module/*
+**/dist/*
+**/*.env
+!**/example.env

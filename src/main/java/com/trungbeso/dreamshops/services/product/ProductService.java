@@ -2,6 +2,7 @@ package com.trungbeso.dreamshops.services.product;
 
 import com.trungbeso.dreamshops.dtos.ImageDto;
 import com.trungbeso.dreamshops.dtos.ProductDto;
+import com.trungbeso.dreamshops.exception.AlreadyExistsException;
 import com.trungbeso.dreamshops.exception.ProductNotFoundException;
 import com.trungbeso.dreamshops.models.Category;
 import com.trungbeso.dreamshops.models.Image;
@@ -35,6 +36,10 @@ public class ProductService implements IProductService {
 		//check if the category is found in the Database
 		// If yes, set it as the new Product category
 		// If no, save it as a new category then set as the new Product category
+
+		if (productExists(request.getName(), request.getBrand())) {
+			throw new AlreadyExistsException(request.getBrand() + " " + request.getName() + " already exists, you may update this product instead");
+		}
 
 		Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
 			  .orElseGet(() -> {
@@ -138,5 +143,9 @@ public class ProductService implements IProductService {
 			  .toList();
 		productDto.setImages(imageDtos);
 		return productDto;
+	}
+
+	private boolean productExists(String name, String brand) {
+		return productRepository.existsByNameAndBrand(name, brand);
 	}
 }
