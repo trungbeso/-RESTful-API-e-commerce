@@ -1,6 +1,5 @@
 package com.trungbeso.dreamshops.security.user;
 
-import com.trungbeso.dreamshops.exception.ResourceNotFoundException;
 import com.trungbeso.dreamshops.models.User;
 import com.trungbeso.dreamshops.repositories.IUserRepository;
 import lombok.AccessLevel;
