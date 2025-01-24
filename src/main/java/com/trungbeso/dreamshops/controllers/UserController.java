@@ -29,7 +29,7 @@ public class UserController {
 	public ResponseEntity<ApiResponse> getUserById(@PathVariable Long userId) {
 		try {
 			User user = userService.getUserById(userId);
-			UserDto userDto = userService.convertTouserDto(user);
+			UserDto userDto = userService.convertToUserDto(user);
 			return ResponseEntity.ok(new ApiResponse("Success", userDto));
 		} catch (ResourceNotFoundException e) {
 			return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
@@ -40,7 +40,7 @@ public class UserController {
 	public ResponseEntity<ApiResponse> createUser(@RequestBody UserCreateRequest request) {
 		try {
 			User user = userService.create(request);
-			UserDto userDto = userService.convertTouserDto(user);
+			UserDto userDto = userService.convertToUserDto(user);
 			return ResponseEntity.ok(new ApiResponse("New user has been created", userDto));
 		} catch (AlreadyExistsException e) {
 			return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
@@ -51,7 +51,7 @@ public class UserController {
 	public ResponseEntity<ApiResponse> updateUser(@RequestBody UserUpdateRequest request, @PathVariable Long userId) {
 		try {
 			User user = userService.update(request, userId);
-			UserDto userDto = userService.convertTouserDto(user);
+			UserDto userDto = userService.convertToUserDto(user);
 			return ResponseEntity.ok(new ApiResponse("User has been updated", userDto));
 		} catch (ResourceNotFoundException e) {
 			return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));

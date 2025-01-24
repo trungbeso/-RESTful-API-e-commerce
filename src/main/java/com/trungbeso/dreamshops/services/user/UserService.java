@@ -59,7 +59,7 @@ public class UserService implements IUserService{
 	}
 
 	@Override
-	public UserDto convertTouserDto(User user) {
+	public UserDto convertToUserDto(User user) {
 		return modelMapper.map(user, UserDto.class);
 	}
 }
