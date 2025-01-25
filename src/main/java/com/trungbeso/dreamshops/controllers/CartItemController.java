@@ -7,6 +7,7 @@ import com.trungbeso.dreamshops.response.ApiResponse;
 import com.trungbeso.dreamshops.services.cart.ICartItemService;
 import com.trungbeso.dreamshops.services.cart.ICartService;
 import com.trungbeso.dreamshops.services.user.IUserService;
+import io.jsonwebtoken.JwtException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -30,14 +32,16 @@ public class CartItemController {
 		  @RequestParam Long productId,
 		  @RequestParam Integer quantity) {
 		try {
-			// in real life never fix cart by userId like this
-			User user = userService.getUserById(1L); //manual param for testing
+			//user must log in to order sth
+			User user = userService.getAuthenticatedUser();
 			Cart cart = cartService.initializeNewCart(user);
 
 			cartItemService.addItemToCart(cart.getId(), productId, quantity);
 			return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
 		} catch (ResourceNotFoundException e) {
 			return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+		} catch (JwtException e) {
+			return ResponseEntity.status(UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
 		}
 	}
 
