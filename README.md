@@ -50,7 +50,7 @@ After that, you need to follow tutorial in `example.evn` file correct your infor
 
 ## 📋 Prerequisites
 
-- JDK 17 or later
+- JDK 21 or later
 - Maven 3.6+
 - MySQL Server
 - Your favorite IDE (IntelliJ IDEA recommended)
@@ -103,27 +103,27 @@ Authorization: Bearer your_jwt_token
 ### Products
 - `GET /api/v1/products` - List all products
 - `GET /api/v1/products/{id}` - Get product details
-- `POST /api/v1/products/add` - Add new product (Authenticated)
-- `PUT /api/v1/products/{id}` - Update product
-- `DELETE /api/v1/products/{id}` - Delete product
+- `POST /api/v1/products/add` - Add new product (ADMIN)
+- `PUT /api/v1/products/{id}` - Update product (ADMIN)
+- `DELETE /api/v1/products/{id}` - Delete product (ADMIN)
 
 ### Categories
 - `GET /api/v1/categories` - List all categories
-- `POST /api/v1/categories` - Create category
-- `PUT /api/v1/categories/{id}` - Update category
-- `DELETE /api/v1/categories/{id}` - Delete category
+- `POST /api/v1/categories` - Create category (ADMIN)
+- `PUT /api/v1/categories/{id}` - Update category (ADMIN) 
+- `DELETE /api/v1/categories/{id}` - Delete category (ADMIN)
 
 ### Cart & Orders
-- `GET /api/v1/carts` - View cart (Authenticated)
-- `POST /api/v1/cartItems` - Add item to cart
-- `PUT /api/v1/cartItems/{id}` - Update cart item
-- `DELETE /api/v1/cartItems/{id}` - Remove item from cart
-- `POST /api/v1/orders` - Create order
-- `GET /api/v1/orders` - List orders
+- `GET /api/v1/carts` - View cart (Authenticate)
+- `POST /api/v1/cartItems` - Add item to cart  (Authenticate)
+- `PUT /api/v1/cartItems/{id}` - Update cart item  (Authenticate)
+- `DELETE /api/v1/cartItems/{id}` - Remove item from cart (Authenticate)
+- `POST /api/v1/orders` - Create order  (Authenticate)
+- `GET /api/v1/orders` - List orders  (Authenticate)
 
 ### Users
-- `GET /api/v1/users/profile` - Get user profile
-- `PUT /api/v1/users/profile` - Update user profile
+- `GET /api/v1/users/profile` - Get user profile  (Authenticate)
+- `PUT /api/v1/users/profile` - Update user profile  (Authenticate)
 
 ## 🤝 Contributing
 

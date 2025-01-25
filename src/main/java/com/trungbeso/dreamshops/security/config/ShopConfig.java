@@ -46,8 +46,15 @@ public class ShopConfig {
 			  .addFilterBefore(new AuthTokenFilter(jwtUtils, userDetailsService), UsernamePasswordAuthenticationFilter.class)
 			  .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
 			  .authorizeHttpRequests(auth -> auth
+				    .requestMatchers("/api/v1/auth/**").permitAll()
+				    .requestMatchers("/api/v1/categories").permitAll()
 					 .requestMatchers("/api/v1/carts/**", "api/v1/cartItems/**").authenticated()
+					 .requestMatchers("/api/v1/users/**").authenticated()
 				    .requestMatchers(HttpMethod.POST, "/api/v1/products/add").authenticated()
+				    .requestMatchers("/api/v1/categories/**").hasRole("ADMIN")
+				    .requestMatchers(HttpMethod.PUT, "/api/v1/products/**").hasRole("ADMIN")
+				    .requestMatchers(HttpMethod.DELETE, "/api/v1/products/**").hasRole("ADMIN")
+				    .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasRole("ADMIN")
 					 .anyRequest().permitAll()
 			  );
 		return http.build();
