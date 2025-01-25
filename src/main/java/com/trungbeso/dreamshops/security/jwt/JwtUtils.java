@@ -42,7 +42,8 @@ public class JwtUtils implements IJwtUtils {
 		//get role
 		List<String> roles = userPrincipal.getAuthorities()
 			  .stream()
-			  .map(GrantedAuthority::getAuthority).toList();
+			  .map(GrantedAuthority::getAuthority)
+			  .toList();
 
 		LocalDateTime expirationAt = LocalDateTime.now().plusMinutes(expirationTime);
 
@@ -92,14 +93,15 @@ public class JwtUtils implements IJwtUtils {
 			if (claims == null) {
 				throw new JwtException("claims can not be null");
 			}
+			//validate roles
+			List<String> roles = claims.get("roles", List.class);
+			if (roles == null || roles.isEmpty()) {
+				throw new JwtException("Access denied: User does not have admin privileges");
+			}
+
 		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
 			throw new JwtException("Invalid JWT token", e);
 		}
-
-		// for reset password UC
-		String jsonTokenId = claims.getId();
-		String email = claims.getSubject();
-
 		return true;
 	}
 

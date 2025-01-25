@@ -35,7 +35,7 @@ public class ProductController {
 	}
 
 	//Path variable mean take variable form url path to method
-	@GetMapping("product/{productId}/product")
+	@GetMapping("/{productId}/product")
 	public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
 		try {
 			Product product = productService.getProductById(productId);
@@ -48,7 +48,6 @@ public class ProductController {
 	}
 
 	//requestBody make sure param exist in DB like valid param first
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("/add")
 	public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
 		try {
@@ -60,8 +59,7 @@ public class ProductController {
 		}
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@PutMapping("/product/{productId}/update")
+	@PutMapping("/{productId}/update")
 	public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long productId) {
 		try {
 			Product theProduct = productService.updateProduct(request, productId);
@@ -72,8 +70,7 @@ public class ProductController {
 		}
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@DeleteMapping("/product/{productId}/delete")
+	@DeleteMapping("/{productId}/delete")
 	public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productId) {
 		try {
 			productService.deleteProductById(productId);
@@ -83,7 +80,7 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("/products/by/brand-and-name")
+	@GetMapping("/by/brand-and-name")
 	public ResponseEntity<ApiResponse> getProductByBrandAndName(@RequestParam String brandName, @RequestParam String productName) {
 		try {
 			List<Product> products = productService.getProductByBrandAndName(brandName, productName);
@@ -98,7 +95,7 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("/products/by/category-and-brand")
+	@GetMapping("/by/category-and-brand")
 	public ResponseEntity<ApiResponse> getProductByCategoryAndBrand(@RequestParam String category, @RequestParam String brand) {
 		try {
 			List<Product> products = productService.getProductByCategoryAndBrand(category, brand);
@@ -112,7 +109,7 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("/products/{name}/products")
+	@GetMapping("/{name}/products")
 	public ResponseEntity<ApiResponse> getProductByName(@PathVariable String name) {
 		try {
 			List<Product> products = productService.getProductByName(name);
@@ -126,7 +123,7 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("/product/by-brand")
+	@GetMapping("/by-brand")
 	public ResponseEntity<ApiResponse> findProductByBrand(@RequestParam String brand) {
 		try {
 			List<Product> products = productService.getProductByBrand(brand);
@@ -140,7 +137,7 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("/product/{category}/all/products")
+	@GetMapping("/{category}/all/products")
 	public ResponseEntity<ApiResponse> findProductByCategory(@PathVariable String category) {
 		try {
 			List<Product> products = productService.getProductsByCategory(category);
