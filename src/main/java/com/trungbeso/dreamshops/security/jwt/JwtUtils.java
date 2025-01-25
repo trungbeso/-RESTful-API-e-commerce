@@ -5,11 +5,16 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import io.jsonwebtoken.security.SecurityException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -17,9 +22,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
-public class JwtUtils {
+public class JwtUtils implements IJwtUtils {
 
 	@Value("${auth.token.jwtSecret}")
 	private String jwtSecret;
@@ -27,6 +34,7 @@ public class JwtUtils {
 	@Value("${auth.token.expiration}")
 	private int expirationTime;
 
+	@Override
 	public String generateTokenForUser(Authentication authentication) {
 		//get user login
 		ShopUserDetails userPrincipal = (ShopUserDetails) authentication.getPrincipal();
@@ -55,6 +63,7 @@ public class JwtUtils {
 	}
 
 	//extract username form token
+	@Override
 	public String getUsernameFromToken(String token) {
 		SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
 		Claims claims = Jwts.parser()
@@ -66,7 +75,11 @@ public class JwtUtils {
 		return claims.getSubject();
 	}
 
+	@Override
 	public boolean validateToken(String token) {
+		if (token == null || token.isEmpty()) {
+			throw new JwtException("Token can not be null or empty");
+		}
 		SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
 		Claims claims;
 
@@ -76,6 +89,9 @@ public class JwtUtils {
 				  .build()
 				  .parseSignedClaims(token)
 				  .getPayload();
+			if (claims == null) {
+				throw new JwtException("claims can not be null");
+			}
 		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
 			throw new JwtException("Invalid JWT token", e);
 		}
@@ -85,6 +101,32 @@ public class JwtUtils {
 		String email = claims.getSubject();
 
 		return true;
+	}
+
+	@Override
+	public Authentication getAuthentication(String token) {
+		if (token == null) {
+			return null;
+		}
+		SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+
+		try {
+			Claims claims = Jwts.parser()
+				  .verifyWith(key)
+				  .build()
+				  .parseSignedClaims(token)
+				  .getPayload();
+
+			String roles = claims.get("roles").toString();
+
+			Set<GrantedAuthority> authorities = Set.of(roles.split(",")).stream()
+				  .map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+
+			User principle = new User(claims.getSubject(), "", authorities);
+			return new UsernamePasswordAuthenticationToken(principle, token, authorities);
+		} catch (ExpiredJwtException e) {
+			return null;
+		}
 	}
 
 }
