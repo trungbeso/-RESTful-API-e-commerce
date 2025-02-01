@@ -1,6 +1,20 @@
-# E-Commerce RESTful API
+# E-commerce REST API with Spring Boot & CI/CD Integration
 
-A robust e-commerce REST API built with Spring Boot that provides comprehensive functionality for managing an online store, including user authentication, product management, shopping cart operations, and order processing.
+Developed a robust e-commerce REST API using Spring Boot, offering comprehensive features for an online store:
+
+☞ User authentication and authorization
+
+☞ Product management
+
+☞ Image upload and download capabilities
+
+☞ Shopping cart operations
+
+☞ Order processing
+
+☞ Implemented Continuous Integration and Continuous Deployment (CI/CD) using a local GitLab host on an Ubuntu server.
+
+![Gitlab CI/CD](https://i.imgur.com/bOMnlN5.png)
 
 First of all, you need to comment out two lines: `createDefaultUserIfNotExists()` and `createDefaultAdminIfNotExists()` to avoid conflicts when no roles exist in your database. After that, you can uncomment and rerun the project to obtain some sample user and admin accounts.
 
